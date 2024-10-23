@@ -1,6 +1,5 @@
 package com.example.traveltimeorganizer;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -9,29 +8,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class InfoHomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_info_home);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        // TODO Implement database and check for upcoming trips
-        if (false) {
-            Intent i = new Intent(this, NoInfoHomeActivity.class);
-            startActivity(i);
-            this.finish();
-        }
-        else {
-            Intent i = new Intent(this, InfoHomeActivity.class);
-            startActivity(i);
-            this.finish();
-        }
     }
 }
