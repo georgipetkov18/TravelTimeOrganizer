@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // TODO Implement database and check for upcoming trips
-        if (false) {
+        if (true) {
             Intent i = new Intent(this, NoInfoHomeActivity.class);
             startActivity(i);
             this.finish();

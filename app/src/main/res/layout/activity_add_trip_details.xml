@@ -5,16 +5,109 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="10dp"
     tools:context=".AddTripDetailsActivity">
 
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="137dp"
-        android:layout_height="14dp"
-        android:text="Addtripdetails screen"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <LinearLayout
+        android:id="@+id/addTripRow1"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/addTripFromInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:hint="@string/from_bg"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:layout_weight="10"/>
+
+        <Button
+            android:id="@+id/addTripFromButton"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/choose_from_map_bg" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/addTripRow2"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addTripRow1">
+
+        <EditText
+            android:id="@+id/addTripToInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:hint="@string/to_bg"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/addTripToButton"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/choose_from_map_bg" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addTripRow2">
+
+        <EditText
+            android:id="@+id/addTripDate"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+
+            android:textSize="20sp"
+            android:importantForAutofill="no"
+            android:clickable="true"
+            android:focusable="false"
+            android:focusableInTouchMode="true"
+            android:hint="Кога"
+            tools:ignore="KeyboardInaccessibleWidget" />
+
+
+        <EditText
+            android:id="@+id/addTripMinEarlier"
+            android:layout_width="wrap_content"
+            android:maxWidth="15dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:textSize="20sp"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:hint="мин"/>
+
+        <Button
+            android:id="@+id/addTripOnTimeButton"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/right_on_time_bg" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,26 @@
 package com.example.traveltimeorganizer;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class AddTripDetailsActivity extends AppCompatActivity {
+    private Date tripDateTime;
+    private EditText addTripDateInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +32,32 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        this.addTripDateInput = findViewById(R.id.addTripDate);
+        this.addTripDateInput.setOnClickListener(view -> {
+            DatePickerDialog datePickerDialog = getDatePickerDialog();
+            datePickerDialog.show();
+        });
+    }
+
+    private @NonNull DatePickerDialog getDatePickerDialog() {
+        Calendar now = Calendar.getInstance();
+
+        return new DatePickerDialog(this, (datePicker, year, month, day) -> {
+            TimePickerDialog timePickerDialog = getTimePickerDialog(now, day, month, year);
+            timePickerDialog.show();
+        }, now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH));
+    }
+
+    private @NonNull TimePickerDialog getTimePickerDialog(Calendar now, int day, int month, int year) {
+        return new TimePickerDialog(this, (timePicker, hour, minute) -> {
+            Calendar chosenDate = Calendar.getInstance();
+            chosenDate.set(year, month, day, hour, minute);
+            this.tripDateTime = chosenDate.getTime();
+
+            String fullDateTime = String.format(Locale.getDefault(), "%d.%d.%d %d:%d", day, month, year, hour, minute);
+
+            this.addTripDateInput.setText(fullDateTime);
+        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
     }
 }
