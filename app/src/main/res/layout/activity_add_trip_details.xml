@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:importantForAutofill="no"
-            android:hint="@string/from_bg"
+            android:hint="@string/from"
             android:inputType="text"
             android:textSize="20sp"
             android:layout_weight="10"/>
@@ -35,7 +35,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/choose_from_map_bg" />
+            android:text="@string/choose_from_map" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
-            android:hint="@string/to_bg"
+            android:hint="@string/to"
             android:importantForAutofill="no"
             android:inputType="text"
             android:textSize="20sp" />
@@ -63,51 +63,72 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/choose_from_map_bg" />
+            android:text="@string/choose_from_map" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:orientation="horizontal"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addTripRow2">
 
         <EditText
             android:id="@+id/addTripDate"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
+            android:layout_weight="12"
 
-            android:textSize="20sp"
-            android:importantForAutofill="no"
             android:clickable="true"
             android:focusable="false"
             android:focusableInTouchMode="true"
-            android:hint="Кога"
+            android:hint="@string/when"
+            android:importantForAutofill="no"
+            android:inputType="datetime"
+            android:textSize="20sp"
             tools:ignore="KeyboardInaccessibleWidget" />
 
 
         <EditText
             android:id="@+id/addTripMinEarlier"
             android:layout_width="wrap_content"
-            android:maxWidth="15dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:textSize="20sp"
+            android:hint="@string/minutes_short"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:hint="мин"/>
+            android:maxWidth="15dp"
+            android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/addTripOnTimeButton"
-            android:layout_width="100dp"
+<!--        <Button-->
+<!--            android:id="@+id/addTripOnTimeButton"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="@string/right_on_time" />-->
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/addTripOnTimeSwitch"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/right_on_time_bg" />
+            android:text="@string/right_on_time"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/saveTripButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="@string/save"
+        android:paddingHorizontal="50dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/success_green"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

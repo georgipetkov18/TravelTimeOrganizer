@@ -2,6 +2,7 @@ package com.example.traveltimeorganizer;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import android.widget.TimePicker;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,6 +23,7 @@ import java.util.Locale;
 public class AddTripDetailsActivity extends AppCompatActivity {
     private Date tripDateTime;
     private EditText addTripDateInput;
+    private EditText addTripMinEarlierInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +35,22 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         this.addTripDateInput = findViewById(R.id.addTripDate);
+        this.addTripMinEarlierInput = findViewById(R.id.addTripMinEarlier);
+
         this.addTripDateInput.setOnClickListener(view -> {
             DatePickerDialog datePickerDialog = getDatePickerDialog();
             datePickerDialog.show();
+        });
+
+        SwitchCompat addTripOnTimeSwitch = findViewById(R.id.addTripOnTimeSwitch);
+        addTripOnTimeSwitch.setOnCheckedChangeListener((view, isChecked) -> {
+            this.addTripMinEarlierInput.setEnabled(!isChecked);
+        });
+
+        findViewById(R.id.addTripFromButton).setOnClickListener(view -> {
+            Intent i = new Intent(this, ChooseLocationMapActivity.class);
+            startActivity(i);
         });
     }
 

@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">TravelTimeOrganizer</string>
-    <string name="no_info_home_add_trip_btn_description_bg">Добави</string>
-    <string name="no_trips_bg">Няма пътувания</string>
-    <string name="choose_from_map_bg">Избери от картата</string>
-    <string name="from_bg">От</string>
-    <string name="to_bg">До</string>
-    <string name="right_on_time_bg">Точно навреме</string>
+    <string name="no_info_home_add_trip_btn_description">Добави</string>
+    <string name="no_trips">Няма пътувания</string>
+    <string name="choose_from_map">Избери от картата</string>
+    <string name="from">От</string>
+    <string name="to">До</string>
+    <string name="right_on_time">Точно навреме</string>
+    <string name="save">Запази</string>
+    <string name="when">Кога</string>
+    <string name="minutes_short">мин</string>
 </resources>
