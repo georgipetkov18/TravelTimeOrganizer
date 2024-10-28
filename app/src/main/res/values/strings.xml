@@ -9,4 +9,7 @@
     <string name="save">Запази</string>
     <string name="when">Кога</string>
     <string name="minutes_short">мин</string>
+    <string name="choose_location">Изберете локация</string>
+    <string name="use_my_location">Използвай моето местоположение</string>
+    <string name="choose">Избери</string>
 </resources>

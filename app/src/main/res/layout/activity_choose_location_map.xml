@@ -7,15 +7,61 @@
     android:layout_height="match_parent"
     tools:context=".ChooseLocationMapActivity">
 
+    <LinearLayout
+        android:id="@+id/mapViewRow1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:padding="7dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/chooseLocationText"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="@string/choose_location"
+            android:textSize="23sp" />
+
+        <Button
+            android:id="@+id/confirmLocationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/choose" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/mapViewRow2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:padding="7dp"
+        app:layout_constraintTop_toBottomOf="@id/mapViewRow1">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/mapViewSwitch1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/use_my_location"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
     <org.osmdroid.views.MapView
         android:id="@+id/map"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:longClickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/mapViewRow2"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

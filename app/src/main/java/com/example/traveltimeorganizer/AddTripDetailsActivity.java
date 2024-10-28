@@ -35,24 +35,13 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         this.addTripDateInput = findViewById(R.id.addTripDate);
         this.addTripMinEarlierInput = findViewById(R.id.addTripMinEarlier);
 
-        this.addTripDateInput.setOnClickListener(view -> {
-            DatePickerDialog datePickerDialog = getDatePickerDialog();
-            datePickerDialog.show();
-        });
-
-        SwitchCompat addTripOnTimeSwitch = findViewById(R.id.addTripOnTimeSwitch);
-        addTripOnTimeSwitch.setOnCheckedChangeListener((view, isChecked) -> {
-            this.addTripMinEarlierInput.setEnabled(!isChecked);
-        });
-
-        findViewById(R.id.addTripFromButton).setOnClickListener(view -> {
-            Intent i = new Intent(this, ChooseLocationMapActivity.class);
-            startActivity(i);
-        });
+        this.setListeners();
     }
+
 
     private @NonNull DatePickerDialog getDatePickerDialog() {
         Calendar now = Calendar.getInstance();
@@ -73,5 +62,30 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
             this.addTripDateInput.setText(fullDateTime);
         }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+    }
+
+    private void setListeners() {
+        this.addTripDateInput.setOnClickListener(view -> {
+            DatePickerDialog datePickerDialog = getDatePickerDialog();
+            datePickerDialog.show();
+        });
+
+        SwitchCompat addTripOnTimeSwitch = findViewById(R.id.addTripOnTimeSwitch);
+        addTripOnTimeSwitch.setOnCheckedChangeListener((view, isChecked) -> {
+            this.addTripMinEarlierInput.setEnabled(!isChecked);
+        });
+
+        findViewById(R.id.addTripFromButton).setOnClickListener(view -> {
+            Intent i = new Intent(this, ChooseLocationMapActivity.class);
+//            Bundle b = new Bundle();
+//            b.putInt(Integer.toString(R.id.addTripFromButton), 4);
+//            i.putExtras(b);
+            startActivity(i);
+        });
+
+        findViewById(R.id.addTripToButton).setOnClickListener(view -> {
+            Intent i = new Intent(this, ChooseLocationMapActivity.class);
+            startActivity(i);
+        });
     }
 }
