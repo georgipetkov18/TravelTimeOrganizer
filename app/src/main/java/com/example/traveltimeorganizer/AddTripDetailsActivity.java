@@ -18,8 +18,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.traveltimeorganizer.utils.Constants;
+
 import org.osmdroid.util.GeoPoint;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -122,9 +125,10 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        double lat = b.getDouble("latitude");
-        double lon = b.getDouble("longitude");
-        String text = lat + " " + lon;
+        double lat = b.getDouble(Constants.LATITUDE);
+        double lon = b.getDouble(Constants.LONGITUDE);
+        DecimalFormat f = new DecimalFormat("##.00000");
+        String text = f.format(lat) + ", " + f.format(lon);
         EditText input = findViewById(id);
         input.setText(text);
     }

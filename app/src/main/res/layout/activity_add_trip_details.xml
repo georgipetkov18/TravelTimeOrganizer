@@ -22,7 +22,7 @@
 
         <EditText
             android:id="@+id/addTripFromInput"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:importantForAutofill="no"
             android:hint="@string/from"
@@ -50,7 +50,7 @@
 
         <EditText
             android:id="@+id/addTripToInput"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:hint="@string/to"
