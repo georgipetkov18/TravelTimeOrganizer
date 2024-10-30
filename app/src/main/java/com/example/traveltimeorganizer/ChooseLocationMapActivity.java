@@ -76,11 +76,9 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
         this.map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         this.map.setMultiTouchControls(true);
 
-        GeoPoint centerOfBgCoordinates = new GeoPoint(42.76, 25.23);
-
         IMapController mapController = this.map.getController();
         mapController.setZoom(8.0);
-        mapController.setCenter(centerOfBgCoordinates);
+        mapController.setCenter(Constants.CENTER_OF_BG);
 
         MapEventsOverlay eventsOverlay = getMapEventsOverlay();
         this.map.getOverlays().add(eventsOverlay);
