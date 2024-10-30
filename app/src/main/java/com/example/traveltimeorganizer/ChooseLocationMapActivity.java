@@ -3,6 +3,7 @@ package com.example.traveltimeorganizer;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -44,13 +45,17 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
 //            int b = bundle.getInt(Integer.toString(R.id.addTripToButton));
 //            int c = 0;
 //        }
-
         SwitchCompat mapViewSwitch1 = findViewById(R.id.mapViewSwitch1);
         mapViewSwitch1.setOnCheckedChangeListener((view, isChecked) -> {
             // TODO: Implement
         });
 
         findViewById(R.id.confirmLocationButton).setOnClickListener(view -> {
+            Intent i = new Intent();
+            i.putExtra("latitude", 11.11);
+            i.putExtra("longitude", 33.33);
+            setResult(Activity.RESULT_OK, i);
+            this.finish();
             // TODO: Implement
         });
 

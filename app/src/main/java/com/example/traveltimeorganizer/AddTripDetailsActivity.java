@@ -1,20 +1,24 @@
 package com.example.traveltimeorganizer;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TimePicker;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +28,8 @@ public class AddTripDetailsActivity extends AppCompatActivity {
     private Date tripDateTime;
     private EditText addTripDateInput;
     private EditText addTripMinEarlierInput;
+    private ActivityResultLauncher<Intent> activityResultLauncherFrom;
+    private ActivityResultLauncher<Intent> activityResultLauncherTo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         this.addTripMinEarlierInput = findViewById(R.id.addTripMinEarlier);
 
         this.setListeners();
+        this.registerActivityResults();
     }
 
 
@@ -77,15 +84,48 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
         findViewById(R.id.addTripFromButton).setOnClickListener(view -> {
             Intent i = new Intent(this, ChooseLocationMapActivity.class);
-//            Bundle b = new Bundle();
-//            b.putInt(Integer.toString(R.id.addTripFromButton), 4);
-//            i.putExtras(b);
-            startActivity(i);
+            this.activityResultLauncherFrom.launch(i);
         });
 
         findViewById(R.id.addTripToButton).setOnClickListener(view -> {
             Intent i = new Intent(this, ChooseLocationMapActivity.class);
-            startActivity(i);
+            this.activityResultLauncherTo.launch(i);
         });
+    }
+
+    private void registerActivityResults() {
+        this.activityResultLauncherFrom = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                this.updateTripInput(R.id.addTripFromInput, result);
+            }
+        });
+
+        this.activityResultLauncherTo = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                this.updateTripInput(R.id.addTripToInput, result);
+            }
+        });
+    }
+
+    private void updateTripInput(int id, ActivityResult result) {
+        if (result.getResultCode() != Activity.RESULT_OK) {
+            return;
+        }
+
+        Intent data = result.getData();
+        if (data == null) {
+            return;
+        }
+
+        Bundle b = data.getExtras();
+        if (b == null) {
+            return;
+        }
+
+        double lat = b.getDouble("latitude");
+        double lon = b.getDouble("longitude");
+        String text = lat + " " + lon;
+        EditText input = findViewById(id);
+        input.setText(text);
     }
 }
