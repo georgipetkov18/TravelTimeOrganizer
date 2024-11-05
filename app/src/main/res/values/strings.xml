@@ -12,4 +12,7 @@
     <string name="choose_location">Изберете локация</string>
     <string name="use_my_location">Използвай моето местоположение</string>
     <string name="choose">Избери</string>
+    <string name="save_trip_popup_text">Искате ли да добавите това пътуване към списъка с любими?</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
 </resources>

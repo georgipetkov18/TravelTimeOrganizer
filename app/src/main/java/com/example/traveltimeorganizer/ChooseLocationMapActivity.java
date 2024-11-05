@@ -73,7 +73,6 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
 
         this.map = findViewById(R.id.map);
         this.map.setTileSource(TileSourceFactory.MAPNIK);
-        this.map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         this.map.setMultiTouchControls(true);
 
         IMapController mapController = this.map.getController();

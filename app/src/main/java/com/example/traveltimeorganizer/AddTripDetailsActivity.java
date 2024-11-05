@@ -1,11 +1,14 @@
 package com.example.traveltimeorganizer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -93,6 +96,19 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         findViewById(R.id.addTripToButton).setOnClickListener(view -> {
             Intent i = new Intent(this, ChooseLocationMapActivity.class);
             this.activityResultLauncherTo.launch(i);
+        });
+
+        findViewById(R.id.saveTripButton).setOnClickListener(view -> {
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.save_trip_popup_text)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(R.string.yes, (dialog, button) -> {
+                        String a = "yes";
+                    })
+                    .setNegativeButton(R.string.no, (dialog, button) -> {
+                        String b = "no";
+                    })
+                    .show();
         });
     }
 
