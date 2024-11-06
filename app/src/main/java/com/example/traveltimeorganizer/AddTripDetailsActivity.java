@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -22,8 +22,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.traveltimeorganizer.utils.Constants;
-
-import org.osmdroid.util.GeoPoint;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -36,6 +35,10 @@ public class AddTripDetailsActivity extends AppCompatActivity {
     private EditText addTripMinEarlierInput;
     private ActivityResultLauncher<Intent> activityResultLauncherFrom;
     private ActivityResultLauncher<Intent> activityResultLauncherTo;
+    private MaterialButtonToggleGroup group;
+    private LinearLayout dayOfWeekPickerRow;
+    private LinearLayout selectTimeRow1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,12 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
         this.addTripDateInput = findViewById(R.id.addTripDate);
         this.addTripMinEarlierInput = findViewById(R.id.addTripMinEarlier);
-
+        this.group = findViewById(R.id.toggleButtonGroup);
+        this.dayOfWeekPickerRow = findViewById(R.id.dayOfWeekPickerRow);
+        this.selectTimeRow1 = findViewById(R.id.selectTimeRow1);
+        for ( int i = 0; i < this.selectTimeRow1.getChildCount();i++ ){
+            this.selectTimeRow1.getChildAt(i).setEnabled(false);
+        }
         this.setListeners();
         this.registerActivityResults();
     }
@@ -103,7 +111,6 @@ public class AddTripDetailsActivity extends AppCompatActivity {
                     .setMessage(R.string.save_trip_popup_text)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(R.string.yes, (dialog, button) -> {
-                        String a = "yes";
                         Intent i = new Intent(this, MainActivity.class);
                         startActivity(i);
                         this.finish();
@@ -112,6 +119,18 @@ public class AddTripDetailsActivity extends AppCompatActivity {
                         String b = "no";
                     })
                     .show();
+        });
+
+        this.group.addOnButtonCheckedListener((currentGroup, checkedId, isChecked) -> {
+            if (isChecked) {
+                this.toggleRows();
+//                if (checkedId == R.id.buttonOneTime) {
+//                    this.toggleRows();
+//                }
+//                else {
+//                    this.toggleRows();
+//                }
+            }
         });
     }
 
@@ -150,5 +169,17 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         String text = f.format(lat) + ", " + f.format(lon);
         EditText input = findViewById(id);
         input.setText(text);
+    }
+
+    private void toggleRows() {
+        for ( int i = 0; i < this.dayOfWeekPickerRow.getChildCount(); i++ ){
+            View child = this.dayOfWeekPickerRow.getChildAt(i);
+            child.setEnabled(!child.isEnabled());
+        }
+
+        for ( int i = 0; i < this.selectTimeRow1.getChildCount(); i++ ){
+            View child = this.selectTimeRow1.getChildAt(i);
+            child.setEnabled(!child.isEnabled());
+        }
     }
 }

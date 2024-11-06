@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/rounded_edges_container"
+        android:background="@drawable/rounded_edges_white_container"
         android:padding="16dp"
         android:gravity="center_vertical"
         android:weightSum="1"

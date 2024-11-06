@@ -15,4 +15,13 @@
     <string name="save_trip_popup_text">Искате ли да добавите това пътуване към списъка с любими?</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
+    <string name="periodically">Периодично</string>
+    <string name="one_time">Еднократно</string>
+    <string name="monday_first_letter">П</string>
+    <string name="tuesday_first_letter">В</string>
+    <string name="wednesday_first_letter">С</string>
+    <string name="thursday_first_letter">Ч</string>
+    <string name="friday_first_letter">П</string>
+    <string name="saturday_first_letter">С</string>
+    <string name="sunday_first_letter">Н</string>
 </resources>

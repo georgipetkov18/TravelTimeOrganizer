@@ -8,106 +8,327 @@
     android:layout_marginHorizontal="10dp"
     tools:context=".AddTripDetailsActivity">
 
-
-    <LinearLayout
-        android:id="@+id/addTripRow1"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="100dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleButtonGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:backgroundTint="@android:color/transparent"
+        app:checkedButton="@+id/buttonPeriodically"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.07"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
-        <EditText
-            android:id="@+id/addTripFromInput"
-            android:layout_width="0dp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonPeriodically"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:importantForAutofill="no"
-            android:hint="@string/from"
-            android:inputType="text"
-            android:textSize="20sp"
-            android:layout_weight="10"/>
+            android:backgroundTint="@color/toggle_button_background_selector"
+            android:text="@string/periodically"
+            android:textColor="@color/toggle_button_text_selector"
+            app:checkedIconTint="?attr/colorPrimary"
+            app:cornerRadius="8dp"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp" />
 
-        <Button
-            android:id="@+id/addTripFromButton"
-            android:layout_width="100dp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonOneTime"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/choose_from_map" />
+            android:backgroundTint="@color/toggle_button_background_selector"
+            android:text="@string/one_time"
+            android:textColor="@color/toggle_button_text_selector"
+            app:checkedIconTint="?attr/colorPrimary"
+            app:cornerRadius="8dp"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1dp" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+    <LinearLayout
+        android:id="@+id/placeCol"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edges_transparent_container"
+        android:orientation="vertical"
+        android:paddingHorizontal="5dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleButtonGroup">
+
+        <LinearLayout
+            android:id="@+id/addTripRow1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/addTripFromInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:hint="@string/from"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/addTripFromButton"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/choose_from_map" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/addTripRow2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addTripRow1">
+
+            <EditText
+                android:id="@+id/addTripToInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:hint="@string/to"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/addTripToButton"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/choose_from_map" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/addTripRow2"
+        android:id="@+id/timeCol"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_edges_transparent_container"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addTripRow1">
+        app:layout_constraintTop_toBottomOf="@+id/placeCol">
 
-        <EditText
-            android:id="@+id/addTripToInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:hint="@string/to"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:id="@+id/dayOfWeekPickerRow"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addTripRow2">
 
-        <Button
-            android:id="@+id/addTripToButton"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/choose_from_map" />
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/calendarButtonGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:backgroundTint="@android:color/transparent">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mon"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/toggle_button_background_selector"
+                    android:minWidth="15dp"
+                    android:text="@string/monday_first_letter"
+                    android:textColor="@color/toggle_button_text_selector"
+                    app:checkedIconTint="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/tue"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/toggle_button_background_selector"
+                    android:minWidth="15dp"
+                    android:text="@string/tuesday_first_letter"
+                    android:textColor="@color/toggle_button_text_selector"
+                    app:checkedIconTint="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/wed"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/toggle_button_background_selector"
+                    android:minWidth="15dp"
+                    android:text="@string/wednesday_first_letter"
+                    android:textColor="@color/toggle_button_text_selector"
+                    app:checkedIconTint="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/thu"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/toggle_button_background_selector"
+                    android:minWidth="15dp"
+                    android:text="@string/thursday_first_letter"
+                    android:textColor="@color/toggle_button_text_selector"
+                    app:checkedIconTint="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/fri"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/toggle_button_background_selector"
+                    android:minWidth="15dp"
+                    android:text="@string/friday_first_letter"
+                    android:textColor="@color/toggle_button_text_selector"
+                    app:checkedIconTint="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sat"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/toggle_button_background_selector"
+                    android:minWidth="15dp"
+                    android:text="@string/saturday_first_letter"
+                    android:textColor="@color/toggle_button_text_selector"
+                    app:checkedIconTint="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sun"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/toggle_button_background_selector"
+                    android:minWidth="15dp"
+                    android:text="@string/sunday_first_letter"
+                    android:textColor="@color/toggle_button_text_selector"
+                    app:checkedIconTint="?attr/colorPrimary"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="1dp" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <ImageButton
+                android:id="@+id/addTripBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="30dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/no_info_home_add_trip_btn_description"
+                android:minWidth="40dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/baseline_access_time_24"
+                app:tint="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/selectTimeRow1"
+            android:layout_width="250dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dayOfWeekPickerRow">
+
+            <EditText
+                android:id="@+id/addTripDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="12"
+
+                android:clickable="true"
+                android:focusable="false"
+                android:focusableInTouchMode="true"
+                android:hint="@string/when"
+                android:importantForAutofill="no"
+                android:inputType="datetime"
+                android:textSize="20sp"
+                tools:ignore="KeyboardInaccessibleWidget" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/selectTimeRow2"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:background="@drawable/rounded_edges_transparent_container"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addTripRow2">
+        app:layout_constraintTop_toBottomOf="@+id/timeCol">
 
-        <EditText
-            android:id="@+id/addTripDate"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="12"
+        <LinearLayout
+            android:id="@+id/selectTimeRow2Inner"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
-            android:clickable="true"
-            android:focusable="false"
-            android:focusableInTouchMode="true"
-            android:hint="@string/when"
-            android:importantForAutofill="no"
-            android:inputType="datetime"
-            android:textSize="20sp"
-            tools:ignore="KeyboardInaccessibleWidget" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/addTripOnTimeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/right_on_time" />
 
-
-        <EditText
-            android:id="@+id/addTripMinEarlier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:hint="@string/minutes_short"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxWidth="15dp"
-            android:textSize="20sp" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/addTripOnTimeSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/right_on_time"/>
+            <EditText
+                android:id="@+id/addTripMinEarlier"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:hint="@string/minutes_short"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxWidth="15dp"
+                android:textSize="20sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <Button
@@ -115,12 +336,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="@string/save"
+        android:backgroundTint="@color/success_green"
         android:paddingHorizontal="50dp"
+        android:text="@string/save"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        android:backgroundTint="@color/success_green"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/selectTimeRow2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
