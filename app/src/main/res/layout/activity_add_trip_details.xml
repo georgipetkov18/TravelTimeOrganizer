@@ -159,7 +159,7 @@
                     android:textColor="@color/toggle_button_text_selector"
                     app:checkedIconTint="?attr/colorPrimary"
                     app:cornerRadius="8dp"
-                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeColor="@color/toggle_button_border_selector"
                     app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -173,7 +173,7 @@
                     android:textColor="@color/toggle_button_text_selector"
                     app:checkedIconTint="?attr/colorPrimary"
                     app:cornerRadius="8dp"
-                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeColor="@color/toggle_button_border_selector"
                     app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -187,7 +187,7 @@
                     android:textColor="@color/toggle_button_text_selector"
                     app:checkedIconTint="?attr/colorPrimary"
                     app:cornerRadius="8dp"
-                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeColor="@color/toggle_button_border_selector"
                     app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -201,7 +201,7 @@
                     android:textColor="@color/toggle_button_text_selector"
                     app:checkedIconTint="?attr/colorPrimary"
                     app:cornerRadius="8dp"
-                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeColor="@color/toggle_button_border_selector"
                     app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -215,7 +215,7 @@
                     android:textColor="@color/toggle_button_text_selector"
                     app:checkedIconTint="?attr/colorPrimary"
                     app:cornerRadius="8dp"
-                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeColor="@color/toggle_button_border_selector"
                     app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -229,7 +229,7 @@
                     android:textColor="@color/toggle_button_text_selector"
                     app:checkedIconTint="?attr/colorPrimary"
                     app:cornerRadius="8dp"
-                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeColor="@color/toggle_button_border_selector"
                     app:strokeWidth="1dp" />
 
                 <com.google.android.material.button.MaterialButton
@@ -243,7 +243,7 @@
                     android:textColor="@color/toggle_button_text_selector"
                     app:checkedIconTint="?attr/colorPrimary"
                     app:cornerRadius="8dp"
-                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeColor="@color/toggle_button_border_selector"
                     app:strokeWidth="1dp" />
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -258,8 +258,7 @@
                 android:contentDescription="@string/no_info_home_add_trip_btn_description"
                 android:minWidth="40dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/baseline_access_time_24"
-                app:tint="@color/black" />
+                android:src="@drawable/baseline_access_time_24" />
 
         </LinearLayout>
 
