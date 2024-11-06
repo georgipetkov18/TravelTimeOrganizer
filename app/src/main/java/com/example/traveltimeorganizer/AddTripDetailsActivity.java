@@ -104,6 +104,9 @@ public class AddTripDetailsActivity extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(R.string.yes, (dialog, button) -> {
                         String a = "yes";
+                        Intent i = new Intent(this, MainActivity.class);
+                        startActivity(i);
+                        this.finish();
                     })
                     .setNegativeButton(R.string.no, (dialog, button) -> {
                         String b = "no";

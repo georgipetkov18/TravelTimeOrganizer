@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -28,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
         if (true) {
             Intent i = new Intent(this, NoInfoHomeActivity.class);
             startActivity(i);
-            this.finish();
+            ActivityCompat.finishAffinity(this);
         }
         else {
             Intent i = new Intent(this, InfoHomeActivity.class);
             startActivity(i);
-            this.finish();
+            ActivityCompat.finishAffinity(this);
         }
     }
 }

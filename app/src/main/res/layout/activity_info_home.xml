@@ -5,16 +5,18 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
     tools:context=".InfoHomeActivity">
 
     <LinearLayout
-        android:id="@+id/tripInfo1"
-        android:layout_width="380dp"
-        android:layout_height="60dp"
-        android:background="@drawable/rounded_edges_container"
-        android:gravity="center"
+        android:id="@+id/tripInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp"
+        android:background="@drawable/rounded_edges_container"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:weightSum="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,92 +24,47 @@
         app:layout_constraintVertical_bias="0.243">
 
         <TextView
-            android:id="@+id/tripInfoDestination1"
-            android:layout_width="wrap_content"
+            android:id="@+id/routeText"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="От Пловдив до София четвъртък" />
+            android:layout_weight="0.5"
+            android:text="София - Пловдив"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="start" />
 
-        <TextView
-            android:id="@+id/tripInfoTime1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="20 мин." />
+            android:layout_weight="0.5"
+            android:orientation="horizontal"
+            android:gravity="end|center_vertical">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/tripInfoSwitch1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/dayText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Четвъртък"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/durationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20 мин"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                android:layout_marginEnd="8dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/tripInfoSwitch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:ignore="NestedWeights" />
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/tripInfo2"
-        android:layout_width="380dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/rounded_edges_container"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tripInfo1">
-
-        <TextView
-            android:id="@+id/tripInfoDestination2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="От Пловдив до София четвъртък" />
-
-        <TextView
-            android:id="@+id/tripInfoTime2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="20 мин." />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/tripInfoSwitch2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/tripInfo3"
-        android:layout_width="380dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/rounded_edges_container"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tripInfo2">
-
-        <TextView
-            android:id="@+id/tripInfoDestination3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="От Пловдив до София четвъртък" />
-
-        <TextView
-            android:id="@+id/tripInfoTime3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="20 мин." />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/tripInfoSwitch3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
