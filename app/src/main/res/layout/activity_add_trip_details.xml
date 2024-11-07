@@ -72,7 +72,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/addTripFromInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                 android:hint="@string/from"
                 android:importantForAutofill="no"
                 android:inputType="text"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
 
             <Button
                 android:id="@+id/addTripFromButton"
@@ -343,5 +343,4 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/selectTimeRow2" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

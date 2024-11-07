@@ -5,8 +5,10 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -21,6 +23,7 @@ import androidx.preference.PreferenceManager;
 import com.example.traveltimeorganizer.utils.Constants;
 
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -30,6 +33,10 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class ChooseLocationMapActivity extends AppCompatActivity {
     private MapView map;
@@ -48,8 +55,9 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
 
         this.initMap();
 
-        SwitchCompat mapViewSwitch1 = findViewById(R.id.mapViewSwitch1);
-        mapViewSwitch1.setOnCheckedChangeListener((view, isChecked) -> {
+        CheckBox mapViewCheckbox1 = findViewById(R.id.mapViewCheckbox1);
+
+        mapViewCheckbox1.setOnCheckedChangeListener((view, isChecked) -> {
             // TODO: Implement
         });
 

@@ -5,8 +5,16 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.location.Address;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -24,10 +32,17 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.traveltimeorganizer.utils.Constants;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
+import org.osmdroid.bonuspack.location.GeocoderNominatim;
+
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class AddTripDetailsActivity extends AppCompatActivity {
     private Date tripDateTime;
@@ -38,7 +53,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
     private MaterialButtonToggleGroup group;
     private LinearLayout dayOfWeekPickerRow;
     private LinearLayout selectTimeRow1;
-
+    private GeocoderNominatim geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +76,8 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         }
         this.setListeners();
         this.registerActivityResults();
+
+        this.geocoder = new GeocoderNominatim(Locale.getDefault(), getText(R.string.app_name).toString());
     }
 
 
@@ -124,13 +141,45 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         this.group.addOnButtonCheckedListener((currentGroup, checkedId, isChecked) -> {
             if (isChecked) {
                 this.toggleRows();
-//                if (checkedId == R.id.buttonOneTime) {
-//                    this.toggleRows();
-//                }
-//                else {
-//                    this.toggleRows();
-//                }
             }
+        });
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        AutoCompleteTextView textView = findViewById(R.id.addTripFromInput);
+        textView.setThreshold(Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD);
+        textView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                if (textView.isPerformingCompletion() || charSequence.length() < Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD) {
+                    return;
+                }
+                executorService.execute(() -> {
+                    try {
+                        List<Address> addresses = geocoder.getFromLocationName(charSequence.toString(), Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_RESULTS_COUNT);
+
+                        handler.post(() -> {
+                            List<String> names = addresses
+                                    .stream()
+                                    .filter(a -> a.getCountryName() != null && a.getLocality() != null)
+                                    .map(a -> String.format(Locale.getDefault(), "%s - %s %6.4f, %6.4f", a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
+                                    .collect(Collectors.toList());
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, names);
+                            textView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
         });
     }
 
