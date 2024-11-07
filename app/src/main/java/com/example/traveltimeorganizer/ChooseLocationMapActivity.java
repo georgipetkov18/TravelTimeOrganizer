@@ -7,7 +7,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
@@ -35,8 +38,12 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class ChooseLocationMapActivity extends AppCompatActivity {
     private MapView map;
@@ -62,13 +69,39 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.confirmLocationButton).setOnClickListener(view -> {
+            Toast.makeText(this, "Възникна грешка при обработката на данните", Toast.LENGTH_LONG).show();
             if (this.currentPoint != null) {
-                Intent i = new Intent();
-                i.putExtra(Constants.LATITUDE, this.currentPoint.getLatitude());
-                i.putExtra(Constants.LONGITUDE, this.currentPoint.getLongitude());
-                setResult(Activity.RESULT_OK, i);
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                Handler handler = new Handler(Looper.getMainLooper());
+
+                double lat = this.currentPoint.getLatitude();
+                double lon = this.currentPoint.getLongitude();
+                executorService.execute(() -> {
+                    try {
+                        GeocoderNominatim geocoder = new GeocoderNominatim(Locale.getDefault(), getText(R.string.app_name).toString());
+                        List<Address> addresses = geocoder.getFromLocation(lat, lon, Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_RESULTS_COUNT);
+
+                        handler.post(() -> {
+                            List<String> names = addresses
+                                    .stream()
+                                    .filter(a -> a.getCountryName() != null && a.getLocality() != null)
+                                    .map(a -> String.format(Locale.getDefault(), "%s - %s %6.4f, %6.4f", a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
+                                    .collect(Collectors.toList());
+                            DecimalFormat f = new DecimalFormat("##.00000");
+                            String text = !names.isEmpty() ? names.get(0) : f.format(lat) + ", " + f.format(lon);
+
+                            Intent i = new Intent();
+                            i.putExtra(Constants.LATITUDE, lat);
+                            i.putExtra(Constants.LONGITUDE, lon);
+                            i.putExtra(Constants.TEXT, text);
+                            setResult(Activity.RESULT_OK, i);
+                            this.finish();
+                        });
+                    } catch (IOException e) {
+                        Toast.makeText(this, "Възникна грешка при обработката на данните", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
-            this.finish();
         });
     }
 

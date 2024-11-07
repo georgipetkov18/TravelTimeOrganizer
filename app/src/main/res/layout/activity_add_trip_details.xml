@@ -100,7 +100,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addTripRow1">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/addTripToInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

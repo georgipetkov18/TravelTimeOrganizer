@@ -71,7 +71,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         this.group = findViewById(R.id.toggleButtonGroup);
         this.dayOfWeekPickerRow = findViewById(R.id.dayOfWeekPickerRow);
         this.selectTimeRow1 = findViewById(R.id.selectTimeRow1);
-        for ( int i = 0; i < this.selectTimeRow1.getChildCount();i++ ){
+        for (int i = 0; i < this.selectTimeRow1.getChildCount(); i++) {
             this.selectTimeRow1.getChildAt(i).setEnabled(false);
         }
         this.setListeners();
@@ -144,43 +144,13 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             }
         });
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Handler handler = new Handler(Looper.getMainLooper());
+        AutoCompleteTextView addTripFromInput = findViewById(R.id.addTripFromInput);
+        addTripFromInput.setThreshold(Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD);
+        addTripFromInput.addTextChangedListener(this.getWatcher(addTripFromInput));
 
-        AutoCompleteTextView textView = findViewById(R.id.addTripFromInput);
-        textView.setThreshold(Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD);
-        textView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                if (textView.isPerformingCompletion() || charSequence.length() < Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD) {
-                    return;
-                }
-                executorService.execute(() -> {
-                    try {
-                        List<Address> addresses = geocoder.getFromLocationName(charSequence.toString(), Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_RESULTS_COUNT);
-
-                        handler.post(() -> {
-                            List<String> names = addresses
-                                    .stream()
-                                    .filter(a -> a.getCountryName() != null && a.getLocality() != null)
-                                    .map(a -> String.format(Locale.getDefault(), "%s - %s %6.4f, %6.4f", a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
-                                    .collect(Collectors.toList());
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, names);
-                            textView.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                        });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {}
-        });
+        AutoCompleteTextView addTripToInput = findViewById(R.id.addTripToInput);
+        addTripToInput.setThreshold(Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD);
+        addTripToInput.addTextChangedListener(this.getWatcher(addTripToInput));
     }
 
     private void registerActivityResults() {
@@ -214,21 +184,63 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
         double lat = b.getDouble(Constants.LATITUDE);
         double lon = b.getDouble(Constants.LONGITUDE);
-        DecimalFormat f = new DecimalFormat("##.00000");
-        String text = f.format(lat) + ", " + f.format(lon);
-        EditText input = findViewById(id);
-        input.setText(text);
+        String text = b.getString(Constants.TEXT);
+
+        AutoCompleteTextView textView = findViewById(id);
+        textView.setText(text);
+
+
     }
 
     private void toggleRows() {
-        for ( int i = 0; i < this.dayOfWeekPickerRow.getChildCount(); i++ ){
+        for (int i = 0; i < this.dayOfWeekPickerRow.getChildCount(); i++) {
             View child = this.dayOfWeekPickerRow.getChildAt(i);
             child.setEnabled(!child.isEnabled());
         }
 
-        for ( int i = 0; i < this.selectTimeRow1.getChildCount(); i++ ){
+        for (int i = 0; i < this.selectTimeRow1.getChildCount(); i++) {
             View child = this.selectTimeRow1.getChildAt(i);
             child.setEnabled(!child.isEnabled());
         }
+    }
+
+    private TextWatcher getWatcher(AutoCompleteTextView textView) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                if (textView.isPerformingCompletion() || charSequence.length() < Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD) {
+                    return;
+                }
+                executorService.execute(() -> {
+                    try {
+                        List<Address> addresses = geocoder.getFromLocationName(charSequence.toString(), Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_RESULTS_COUNT);
+
+                        handler.post(() -> {
+                            List<String> names = addresses
+                                    .stream()
+                                    .filter(a -> a.getCountryName() != null && a.getLocality() != null)
+                                    .map(a -> String.format(Locale.getDefault(), "%s - %s %6.4f, %6.4f", a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
+                                    .collect(Collectors.toList());
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, names);
+                            textView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        };
     }
 }
