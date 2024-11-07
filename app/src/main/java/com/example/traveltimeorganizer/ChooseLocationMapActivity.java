@@ -69,7 +69,6 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.confirmLocationButton).setOnClickListener(view -> {
-            Toast.makeText(this, "Възникна грешка при обработката на данните", Toast.LENGTH_LONG).show();
             if (this.currentPoint != null) {
                 ExecutorService executorService = Executors.newSingleThreadExecutor();
                 Handler handler = new Handler(Looper.getMainLooper());
