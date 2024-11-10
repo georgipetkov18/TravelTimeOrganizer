@@ -10,6 +10,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.traveltimeorganizer.data.TripManager;
+import com.example.traveltimeorganizer.data.models.Trip;
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        TripManager manager = new TripManager(this);
         // TODO Implement database and check for upcoming trips
         if (true) {
             Intent i = new Intent(this, NoInfoHomeActivity.class);

@@ -1,7 +1,6 @@
 package com.example.traveltimeorganizer;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -12,11 +11,11 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
@@ -29,13 +28,23 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.traveltimeorganizer.data.TripManager;
+import com.example.traveltimeorganizer.data.models.Trip;
 import com.example.traveltimeorganizer.utils.Constants;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import org.osmdroid.bonuspack.location.GeocoderNominatim;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
+import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.bonuspack.utils.BonusPackHelper;
+import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -46,8 +55,11 @@ import java.util.stream.Collectors;
 
 public class AddTripDetailsActivity extends AppCompatActivity {
     private Date tripDateTime;
+    private Trip trip;
     private EditText addTripDateInput;
     private EditText addTripMinEarlierInput;
+    private AutoCompleteTextView addTripFromInput;
+    private AutoCompleteTextView addTripToInput;
     private ActivityResultLauncher<Intent> activityResultLauncherFrom;
     private ActivityResultLauncher<Intent> activityResultLauncherTo;
     private MaterialButtonToggleGroup group;
@@ -67,10 +79,13 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         });
 
         this.addTripDateInput = findViewById(R.id.addTripDate);
+        this.trip = new Trip();
         this.addTripMinEarlierInput = findViewById(R.id.addTripMinEarlier);
         this.group = findViewById(R.id.toggleButtonGroup);
         this.dayOfWeekPickerRow = findViewById(R.id.dayOfWeekPickerRow);
         this.selectTimeRow1 = findViewById(R.id.selectTimeRow1);
+        this.addTripFromInput = findViewById(R.id.addTripFromInput);
+        this.addTripToInput = findViewById(R.id.addTripToInput);
         for (int i = 0; i < this.selectTimeRow1.getChildCount(); i++) {
             this.selectTimeRow1.getChildAt(i).setEnabled(false);
         }
@@ -87,7 +102,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         return new DatePickerDialog(this, (datePicker, year, month, day) -> {
             TimePickerDialog timePickerDialog = getTimePickerDialog(now, day, month, year);
             timePickerDialog.show();
-        }, now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1, now.get(Calendar.DAY_OF_MONTH));
+        }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
     }
 
     private @NonNull TimePickerDialog getTimePickerDialog(Calendar now, int day, int month, int year) {
@@ -96,9 +111,13 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             chosenDate.set(year, month, day, hour, minute);
             this.tripDateTime = chosenDate.getTime();
 
-            String fullDateTime = String.format(Locale.getDefault(), "%d.%d.%d %d:%d", day, month, year, hour, minute);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+            formatter.format(LocalDateTime.of(year, month, day, hour, minute));
+            String fullDateTime = formatter.format(LocalDateTime.of(year, month, day, hour, minute));
 
             this.addTripDateInput.setText(fullDateTime);
+            this.trip.setExecuteOn(fullDateTime);
+            this.trip.setRepeatOn(null);
         }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
     }
 
@@ -110,6 +129,9 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
         SwitchCompat addTripOnTimeSwitch = findViewById(R.id.addTripOnTimeSwitch);
         addTripOnTimeSwitch.setOnCheckedChangeListener((view, isChecked) -> {
+            if (isChecked) {
+                trip.setMinEarlier(0);
+            }
             this.addTripMinEarlierInput.setEnabled(!isChecked);
         });
 
@@ -124,18 +146,44 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.saveTripButton).setOnClickListener(view -> {
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.save_trip_popup_text)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(R.string.yes, (dialog, button) -> {
-                        Intent i = new Intent(this, MainActivity.class);
-                        startActivity(i);
-                        this.finish();
-                    })
-                    .setNegativeButton(R.string.no, (dialog, button) -> {
-                        String b = "no";
-                    })
-                    .show();
+//            new AlertDialog.Builder(this)
+//                    .setMessage(R.string.save_trip_popup_text)
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .setPositiveButton(R.string.yes, (dialog, button) -> {
+//                        Intent i = new Intent(this, MainActivity.class);
+//                        startActivity(i);
+//                        this.finish();
+//                    })
+//                    .setNegativeButton(R.string.no, (dialog, button) -> {
+//                        String b = "no";
+//                    })
+////                    .show();
+
+
+
+            RoadManager roadManager = new OSRMRoadManager(this, BonusPackHelper.DEFAULT_USER_AGENT);
+            ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+            waypoints.add(new GeoPoint(trip.getFromLatitude(), trip.getFromLongitude()));
+            waypoints.add(new GeoPoint(trip.getToLatitude(), trip.getToLongitude()));
+
+            Road road = roadManager.getRoad(waypoints);
+            this.trip.setTripTime(road.mDuration);
+            this.trip.setActive(true);
+
+            boolean hasSetPlaceFrom = this.setPlaceInfo(this.addTripFromInput);
+            boolean hasSetPlaceTo = this.setPlaceInfo(this.addTripToInput);
+
+            if (!hasSetPlaceFrom || !hasSetPlaceTo) {
+                Toast.makeText(this, "Грешен с формата на данните", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            TripManager manager = new TripManager(this);
+            manager.addTrip(this.trip);
+
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            this.finish();
         });
 
         this.group.addOnButtonCheckedListener((currentGroup, checkedId, isChecked) -> {
@@ -144,13 +192,29 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             }
         });
 
-        AutoCompleteTextView addTripFromInput = findViewById(R.id.addTripFromInput);
-        addTripFromInput.setThreshold(Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD);
-        addTripFromInput.addTextChangedListener(this.getWatcher(addTripFromInput));
+        this.addTripFromInput.setThreshold(Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD);
+        this.addTripFromInput.addTextChangedListener(this.getWatcher(this.addTripFromInput));
 
         AutoCompleteTextView addTripToInput = findViewById(R.id.addTripToInput);
         addTripToInput.setThreshold(Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD);
         addTripToInput.addTextChangedListener(this.getWatcher(addTripToInput));
+
+        this.addTripMinEarlierInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                trip.setMinEarlier(Integer.parseInt(editable.toString()));
+            }
+        });
     }
 
     private void registerActivityResults() {
@@ -226,7 +290,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
                             List<String> names = addresses
                                     .stream()
                                     .filter(a -> a.getCountryName() != null && a.getLocality() != null)
-                                    .map(a -> String.format(Locale.getDefault(), "%s - %s %6.4f, %6.4f", a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
+                                    .map(a -> String.format(Locale.getDefault(), Constants.PLACE_INPUT_STRING_FORMAT, a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
                                     .collect(Collectors.toList());
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, names);
                             textView.setAdapter(adapter);
@@ -242,5 +306,44 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         };
+    }
+
+    private boolean setPlaceInfo(AutoCompleteTextView textView) {
+        String[] splitted = textView.getText().toString().split("-");
+        String place = null;
+        String[] coordinates = splitted[0].split(", ");
+        if (splitted.length > 1) {
+            place = splitted[0].trim();
+            splitted = textView.getText().toString().split(": ");
+            coordinates = splitted.length > 1 ? splitted[1].split(", ") : splitted;
+        }
+
+        double lat = 0;
+        double lon = 0;
+        if (coordinates.length > 1) {
+            try {
+                lat = Double.parseDouble(coordinates[0]);
+                lon = Double.parseDouble(coordinates[1]);
+            }
+            catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+
+        if (textView.getId() == R.id.addTripFromInput) {
+            trip.setFromPlace(place);
+            trip.setFromLatitude(lat);
+            trip.setFromLongitude(lon);
+        }
+        else {
+            trip.setToPlace(place);
+            trip.setToLatitude(lat);
+            trip.setToLongitude(lon);
+        }
+
+        return true;
     }
 }
