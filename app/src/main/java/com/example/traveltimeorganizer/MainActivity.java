@@ -12,7 +12,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.traveltimeorganizer.data.TripManager;
 import com.example.traveltimeorganizer.data.models.Trip;
+import com.example.traveltimeorganizer.utils.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,16 +32,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         TripManager manager = new TripManager(this);
-        // TODO Implement database and check for upcoming trips
-        if (true) {
-            Intent i = new Intent(this, NoInfoHomeActivity.class);
-            startActivity(i);
-            ActivityCompat.finishAffinity(this);
+        ArrayList<Trip> trips = manager.getTrips();
+        Intent i;
+        if (trips.isEmpty()) {
+            i = new Intent(this, NoInfoHomeActivity.class);
         }
         else {
-            Intent i = new Intent(this, InfoHomeActivity.class);
-            startActivity(i);
-            ActivityCompat.finishAffinity(this);
+            i = new Intent(this, InfoHomeActivity.class);
+            i.putExtra(Constants.TABLE_TRIPS_NAME, trips);
         }
+        startActivity(i);
+        ActivityCompat.finishAffinity(this);
     }
 }

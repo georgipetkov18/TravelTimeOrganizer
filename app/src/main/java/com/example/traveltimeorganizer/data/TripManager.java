@@ -61,7 +61,7 @@ public class TripManager extends SQLiteOpenHelper implements DatabaseModelManage
     }
 
     @SuppressLint("Range")
-    public List<Trip> getTrips() {
+    public ArrayList<Trip> getTrips() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         String[] columns = {
                 Constants.ID, Constants.FROM_PLACE, Constants.TO_PLACE, Constants.FROM_LATITUDE, Constants.FROM_LONGITUDE,
@@ -70,7 +70,7 @@ public class TripManager extends SQLiteOpenHelper implements DatabaseModelManage
         };
         Cursor cursor = sqLiteDatabase.query(Constants.TABLE_TRIPS_NAME, columns, null, null, null, null, null);
 
-        List<Trip> trips = new ArrayList<>();
+        ArrayList<Trip> trips = new ArrayList<>();
         while (cursor.moveToNext()) {
             Trip trip = new Trip();
             trip.setId(cursor.getInt(cursor.getColumnIndex(Constants.ID)));

@@ -2,7 +2,9 @@ package com.example.traveltimeorganizer.data.models;
 
 import androidx.annotation.Nullable;
 
-public class Trip {
+import java.io.Serializable;
+
+public class Trip implements Serializable {
     private int id;
 
     @Nullable
