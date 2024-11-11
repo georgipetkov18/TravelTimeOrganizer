@@ -2,6 +2,7 @@ package com.example.traveltimeorganizer;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.location.Address;
@@ -22,16 +23,20 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.traveltimeorganizer.data.TripManager;
 import com.example.traveltimeorganizer.data.models.Trip;
 import com.example.traveltimeorganizer.utils.Constants;
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.timepicker.TimeFormat;
 
 import org.osmdroid.bonuspack.location.GeocoderNominatim;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -41,14 +46,15 @@ import org.osmdroid.bonuspack.utils.BonusPackHelper;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -78,6 +84,8 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             return insets;
         });
 
+        this.initDayOfWeekSelector();
+
         this.addTripDateInput = findViewById(R.id.addTripDate);
         this.trip = new Trip();
         this.addTripMinEarlierInput = findViewById(R.id.addTripMinEarlier);
@@ -95,29 +103,38 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         this.geocoder = new GeocoderNominatim(Locale.getDefault(), getText(R.string.app_name).toString());
     }
 
+    private void initDayOfWeekSelector() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        for (Map.Entry<Integer, String> entry : Constants.DAY_OF_WEEK_INDEX_MAP.entrySet()) {
+            DayOfWeekButtonFragment fragment = DayOfWeekButtonFragment.newInstance(entry.getKey(), entry.getValue());
+            transaction.add(R.id.calendarButtonGroup, fragment);
+        }
+        transaction.commit();
+    }
+
 
     private @NonNull DatePickerDialog getDatePickerDialog() {
         Calendar now = Calendar.getInstance();
 
         return new DatePickerDialog(this, (datePicker, year, month, day) -> {
-            TimePickerDialog timePickerDialog = getTimePickerDialog(now, day, month, year);
+            TimePickerDialog timePickerDialog = getTimePickerDialogForDatePicker(now, day, month, year);
             timePickerDialog.show();
         }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
     }
 
-    private @NonNull TimePickerDialog getTimePickerDialog(Calendar now, int day, int month, int year) {
+    private @NonNull TimePickerDialog getTimePickerDialogForDatePicker(Calendar now, int day, int month, int year) {
         return new TimePickerDialog(this, (timePicker, hour, minute) -> {
             Calendar chosenDate = Calendar.getInstance();
             chosenDate.set(year, month, day, hour, minute);
             this.tripDateTime = chosenDate.getTime();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-            formatter.format(LocalDateTime.of(year, month, day, hour, minute));
             String fullDateTime = formatter.format(LocalDateTime.of(year, month, day, hour, minute));
 
             this.addTripDateInput.setText(fullDateTime);
             this.trip.setExecuteOn(fullDateTime);
-            this.trip.setRepeatOn(null);
         }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
     }
 
@@ -159,26 +176,24 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 //                    })
 ////                    .show();
 
-
-
-            RoadManager roadManager = new OSRMRoadManager(this, BonusPackHelper.DEFAULT_USER_AGENT);
-            ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-            waypoints.add(new GeoPoint(trip.getFromLatitude(), trip.getFromLongitude()));
-            waypoints.add(new GeoPoint(trip.getToLatitude(), trip.getToLongitude()));
-
-            Road road = roadManager.getRoad(waypoints);
-            this.trip.setTripTime(road.mDuration);
-            this.trip.setActive(true);
-
             boolean hasSetPlaceFrom = this.setPlaceInfo(this.addTripFromInput);
             boolean hasSetPlaceTo = this.setPlaceInfo(this.addTripToInput);
 
             if (!hasSetPlaceFrom || !hasSetPlaceTo) {
-                Toast.makeText(this, "Грешен с формата на данните", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Грешен формат на данните", Toast.LENGTH_LONG).show();
                 return;
             }
-
             TripManager manager = new TripManager(this);
+            ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+            waypoints.add(new GeoPoint(trip.getFromLatitude(), trip.getFromLongitude()));
+            waypoints.add(new GeoPoint(trip.getToLatitude(), trip.getToLongitude()));
+
+            RoadManager roadManager = new OSRMRoadManager(this, BonusPackHelper.DEFAULT_USER_AGENT);
+            Road road = roadManager.getRoad(waypoints);
+            this.trip.setTripTime(road.mDuration);
+            this.trip.setActive(true);
+
+
             manager.addTrip(this.trip);
 
             Intent i = new Intent(this, MainActivity.class);
@@ -188,7 +203,32 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
         this.group.addOnButtonCheckedListener((currentGroup, checkedId, isChecked) -> {
             if (isChecked) {
+                if (checkedId == R.id.buttonPeriodically) {
+                    this.trip.setExecuteOn(null);
+                }
+
+                else if (checkedId == R.id.buttonOneTime) {
+                    this.trip.setRepeatOnDay(null);
+                    this.trip.setRepeatOnTime(null);
+                }
+
                 this.toggleRows();
+                this.addTripDateInput.setText("");
+            }
+        });
+
+        MaterialButtonToggleGroup calendarButtonGroup = findViewById(R.id.calendarButtonGroup);
+        calendarButtonGroup.addOnButtonCheckedListener((currentGroup, checkedId, isChecked) -> {
+            @Nullable Integer repeatOnDayValue = this.trip.getRepeatOnDay();
+            if (repeatOnDayValue == null) {
+                repeatOnDayValue = 0;
+            }
+
+            if (isChecked) {
+                this.trip.setRepeatOnDay(repeatOnDayValue + checkedId);
+            }
+            else {
+                this.trip.setRepeatOnDay(repeatOnDayValue - checkedId);
             }
         });
 
@@ -214,6 +254,17 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 trip.setMinEarlier(Integer.parseInt(editable.toString()));
             }
+        });
+
+        findViewById(R.id.clockBtn).setOnClickListener(view -> {
+            Calendar now = Calendar.getInstance();
+            TimePickerDialog dialog = new TimePickerDialog(this, (timePicker, hour, minute) -> {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                String time = formatter.format(LocalTime.of(hour, minute));
+                this.addTripDateInput.setText(time);
+                this.trip.setRepeatOnTime(time);
+            }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+            dialog.show();
         });
     }
 

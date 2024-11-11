@@ -26,7 +26,10 @@ public class Trip {
     private int minEarlier;
 
     @Nullable
-    private Integer repeatOn;
+    private Integer repeatOnDay;
+
+    @Nullable
+    private String repeatOnTime;
 
     @Nullable
     private String executeOn;
@@ -99,12 +102,12 @@ public class Trip {
     }
 
     @Nullable
-    public Integer getRepeatOn() {
-        return repeatOn;
+    public Integer getRepeatOnDay() {
+        return repeatOnDay;
     }
 
-    public void setRepeatOn(@Nullable Integer repeatOn) {
-        this.repeatOn = repeatOn;
+    public void setRepeatOnDay(@Nullable Integer repeatOnDay) {
+        this.repeatOnDay = repeatOnDay;
     }
 
     @Nullable
@@ -130,5 +133,14 @@ public class Trip {
 
     public void setToLongitude(double toLongitude) {
         this.toLongitude = toLongitude;
+    }
+
+    @Nullable
+    public String getRepeatOnTime() {
+        return repeatOnTime;
+    }
+
+    public void setRepeatOnTime(@Nullable String repeatOnTime) {
+        this.repeatOnTime = repeatOnTime;
     }
 }

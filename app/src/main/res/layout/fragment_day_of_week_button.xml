@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<com.google.android.material.button.MaterialButton
+    android:id="@+id/dayOfWeekButtonFragment"
+    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/toggle_button_background_selector"
+    android:minWidth="10dp"
+    android:textColor="@color/toggle_button_text_selector"
+    app:checkedIconTint="?attr/colorPrimary"
+    app:cornerRadius="8dp"
+    app:strokeColor="@color/toggle_button_border_selector"
+    app:strokeWidth="1dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
