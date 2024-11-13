@@ -9,6 +9,4 @@ public class Utils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return formatter.format(LocalTime.ofSecondOfDay((long)seconds));
     }
-
-//    public static String
 }

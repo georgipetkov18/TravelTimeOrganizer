@@ -13,7 +13,6 @@ import com.example.traveltimeorganizer.data.models.Trip;
 import com.example.traveltimeorganizer.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class TripManager extends SQLiteOpenHelper implements DatabaseModelManager {
@@ -51,6 +50,13 @@ public class TripManager extends SQLiteOpenHelper implements DatabaseModelManage
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.insert(Constants.TABLE_TRIPS_NAME, null, values);
+    }
+
+    public void setActiveStatus(int id, boolean isActive) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.IS_ACTIVE, isActive);
+        sqLiteDatabase.update(Constants.TABLE_TRIPS_NAME, values, "id = ?", new String[]{Integer.toString(id)});
     }
 
     public String getCreateTableQuery() {

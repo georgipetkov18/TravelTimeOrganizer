@@ -11,15 +11,16 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.traveltimeorganizer.R;
+import com.example.traveltimeorganizer.data.TripManager;
 import com.example.traveltimeorganizer.data.models.Trip;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     private final List<Trip> trips;
     private int color;
+    private TripManager manager;
 
     public TripAdapter(List<Trip> trips) {
         this.trips = trips;
@@ -30,6 +31,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_trip_container, parent, false);
         color = ContextCompat.getColor(parent.getContext(), R.color.black);
+        manager = new TripManager(parent.getContext());
         return new ViewHolder(view);
     }
 
@@ -41,7 +43,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         String toText = current.getToPlace() != null ? current.getToPlace() : current.getToLatitude() + ", " + current.getToLongitude();
         holder.routeText.setText(String.format("%s - %s", fromText, toText));
 
-        // TODO: Fix
         if (current.getRepeatOnDay() != null) {
             for (Map.Entry<Integer, String> entry : Constants.DAY_OF_WEEK_INDEX_MAP.entrySet()) {
                 TextView currentView = null;
@@ -84,6 +85,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
         holder.durationText.setText(Utils.formatTripTime(current.getTripTime()));
         holder.tripInfoSwitch.setChecked(current.isActive());
+
+        holder.tripInfoSwitch.setOnCheckedChangeListener((view, isChecked) -> {
+            int id = current.getId();
+            manager.setActiveStatus(id, isChecked);
+            current.setActive(isChecked);
+        });
 
     }
 
