@@ -4,19 +4,19 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.traveltimeorganizer.data.models.Trip;
 import com.example.traveltimeorganizer.utils.Constants;
+import com.example.traveltimeorganizer.utils.TripAdapter;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class InfoHomeActivity extends AppCompatActivity {
 
@@ -32,17 +32,8 @@ public class InfoHomeActivity extends AppCompatActivity {
         });
 
         ArrayList<Trip> trips = (ArrayList<Trip>)getIntent().getExtras().getSerializable(Constants.TABLE_TRIPS_NAME);
-
-        if (trips == null) {
-            return;
-        }
-
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-
-        for (int i = 0; i < trips.size(); i++) {
-            SingleTripContainer fragment = SingleTripContainer.newInstance(i);
-        }
-        transaction.commit();
+        RecyclerView recycler = findViewById(R.id.trip_recycler);
+        recycler.setLayoutManager(new LinearLayoutManager((this)));
+        recycler.setAdapter(new TripAdapter(trips));
     }
 }

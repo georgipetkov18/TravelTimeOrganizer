@@ -84,7 +84,7 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
                             List<String> names = addresses
                                     .stream()
                                     .filter(a -> a.getCountryName() != null && a.getLocality() != null)
-                                    .map(a -> String.format(Locale.getDefault(), Constants.PLACE_INPUT_STRING_FORMAT, a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
+                                    .map(a -> String.format(Locale.forLanguageTag("en"), Constants.PLACE_INPUT_STRING_FORMAT, a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
                                     .collect(Collectors.toList());
                             DecimalFormat f = new DecimalFormat("##.00000");
                             String text = !names.isEmpty() ? names.get(0) : f.format(lat) + ", " + f.format(lon);

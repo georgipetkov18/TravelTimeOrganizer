@@ -341,7 +341,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
                             List<String> names = addresses
                                     .stream()
                                     .filter(a -> a.getCountryName() != null && a.getLocality() != null)
-                                    .map(a -> String.format(Locale.getDefault(), Constants.PLACE_INPUT_STRING_FORMAT, a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
+                                    .map(a -> String.format(Locale.forLanguageTag("en"), Constants.PLACE_INPUT_STRING_FORMAT, a.getLocality(), a.getCountryName(), a.getLatitude(), a.getLongitude()))
                                     .collect(Collectors.toList());
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, names);
                             textView.setAdapter(adapter);
