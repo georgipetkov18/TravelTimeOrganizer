@@ -3,6 +3,7 @@ package com.example.traveltimeorganizer.data.models;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class Trip implements Serializable {
     private int id;

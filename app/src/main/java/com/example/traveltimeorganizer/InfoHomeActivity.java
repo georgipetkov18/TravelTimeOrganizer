@@ -34,6 +34,6 @@ public class InfoHomeActivity extends AppCompatActivity {
         ArrayList<Trip> trips = (ArrayList<Trip>)getIntent().getExtras().getSerializable(Constants.TABLE_TRIPS_NAME);
         RecyclerView recycler = findViewById(R.id.trip_recycler);
         recycler.setLayoutManager(new LinearLayoutManager((this)));
-        recycler.setAdapter(new TripAdapter(trips));
+        recycler.setAdapter(new TripAdapter(trips, this));
     }
 }

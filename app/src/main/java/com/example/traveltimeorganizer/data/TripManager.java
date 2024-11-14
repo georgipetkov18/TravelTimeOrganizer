@@ -19,7 +19,7 @@ public class TripManager extends SQLiteOpenHelper implements DatabaseModelManage
 
 
     public TripManager(@Nullable Context context) {
-        super(context, Constants.DATABASE_NAME, null, 6);
+        super(context, Constants.DATABASE_NAME, null, 8);
     }
 
     @Override
@@ -66,6 +66,11 @@ public class TripManager extends SQLiteOpenHelper implements DatabaseModelManage
                 Constants.MIN_EARLIER, Constants.REPEAT_ON_DAY, Constants.REPEAT_ON_TIME, Constants.EXECUTE_ON);
     }
 
+    public void deleteTrip(int id) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.delete(Constants.TABLE_TRIPS_NAME, "id = ?", new String[] {Integer.toString(id)});
+    }
+
     @SuppressLint("Range")
     public ArrayList<Trip> getTrips() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -89,7 +94,9 @@ public class TripManager extends SQLiteOpenHelper implements DatabaseModelManage
             trip.setActive(cursor.getInt(cursor.getColumnIndex(Constants.IS_ACTIVE)) > 0);
             trip.setTripTime(cursor.getDouble(cursor.getColumnIndex(Constants.TRIP_TIME)));
             trip.setMinEarlier(cursor.getInt(cursor.getColumnIndex(Constants.MIN_EARLIER)));
-            trip.setRepeatOnDay(cursor.getInt(cursor.getColumnIndex(Constants.REPEAT_ON_DAY)));
+
+            String repeatOnDayAsText = cursor.getString(cursor.getColumnIndex(Constants.REPEAT_ON_DAY));
+            trip.setRepeatOnDay(repeatOnDayAsText != null ? Integer.parseInt(repeatOnDayAsText) : null);
             trip.setRepeatOnTime(cursor.getString(cursor.getColumnIndex(Constants.REPEAT_ON_TIME)));
             trip.setExecuteOn(cursor.getString(cursor.getColumnIndex(Constants.EXECUTE_ON)));
             trips.add(trip);

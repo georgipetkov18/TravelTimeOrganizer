@@ -12,7 +12,7 @@
     <string name="choose_location">Изберете локация</string>
     <string name="use_my_location">Използвай моето местоположение</string>
     <string name="choose">Избери</string>
-    <string name="save_trip_popup_text">Искате ли да добавите това пътуване към списъка с любими?</string>
+    <string name="delete_trip_popup_text">Сигурни ли сте, че искате да изтриете това пътуване?</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
     <string name="periodically">Периодично</string>
@@ -24,4 +24,5 @@
     <string name="friday_first_letter">П</string>
     <string name="saturday_first_letter">С</string>
     <string name="sunday_first_letter">Н</string>
+    <string name="delete">Изтрий</string>
 </resources>
