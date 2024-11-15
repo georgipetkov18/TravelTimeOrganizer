@@ -42,12 +42,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
                 android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/execute_on"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/dayText"
@@ -115,11 +109,14 @@
                         android:id="@+id/sun"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
                         android:text="@string/sunday_first_letter"
                         android:textColor="@color/gray"
                         android:textSize="12sp" />
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/tripTimeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -131,13 +128,13 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/durationText"
+                android:id="@+id/timeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_gravity="end"
                 android:textColor="@color/gray"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout

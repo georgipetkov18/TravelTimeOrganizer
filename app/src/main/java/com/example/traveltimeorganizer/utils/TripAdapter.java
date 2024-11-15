@@ -29,6 +29,7 @@ import com.example.traveltimeorganizer.data.TripManager;
 import com.example.traveltimeorganizer.data.models.Trip;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -98,19 +99,19 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
                 if (currentView != null && (current.getRepeatOnDay() & entry.getKey()) == entry.getKey()) {
                     currentView.setTextColor(color);
                     holder.dayText.setVisibility(View.VISIBLE);
-                    holder.execute_on.setVisibility(View.GONE);
+                    holder.tripTimeText.setText(String.format(Locale.getDefault(), "- %s", Utils.formatTripTime(current.getTripTime())));
                 }
             }
         }
 
         else {
-            holder.execute_on.setText(current.getExecuteOn());
+            holder.tripTimeText.setText(String.format(Locale.getDefault(), "%s - %s", current.getExecuteOn().split(" ")[0], Utils.formatTripTime(current.getTripTime())));
 
             holder.dayText.setVisibility(View.GONE);
-            holder.execute_on.setVisibility(View.VISIBLE);
         }
 
-        holder.durationText.setText(Utils.formatTripTime(current.getTripTime()));
+//        holder.durationText.setText(Utils.formatTripTime(current.getTripTime()));
+        holder.timeText.setText(current.getRepeatOnTime() != null ? current.getRepeatOnTime() : current.getExecuteOn().split(" ")[1]);
         holder.tripInfoSwitch.setChecked(current.isActive());
 
         holder.tripInfoSwitch.setOnCheckedChangeListener((view, isChecked) -> {
@@ -146,7 +147,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         private final TripAdapter adapter;
         private final TripManager manager;
         private final TextView routeText;
-        private final TextView execute_on;
+        private final TextView tripTimeText;
         private final LinearLayout dayText;
         private final TextView monday;
         private final TextView tuesday;
@@ -155,7 +156,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         private final TextView friday;
         private final TextView saturday;
         private final TextView sunday;
-        private final TextView durationText;
+        private final TextView timeText;
         private final SwitchCompat tripInfoSwitch;
 
         public ViewHolder(@NonNull View itemView, TripManager manager, TripAdapter adapter) {
@@ -163,7 +164,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             this.manager = manager;
             this.adapter = adapter;
             routeText = itemView.findViewById(R.id.routeText);
-            execute_on = itemView.findViewById(R.id.execute_on);
+            tripTimeText = itemView.findViewById(R.id.tripTimeText);
             dayText = itemView.findViewById(R.id.dayText);
             monday = itemView.findViewById(R.id.mon);
             tuesday = itemView.findViewById(R.id.tue);
@@ -172,7 +173,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             friday = itemView.findViewById(R.id.fri);
             saturday = itemView.findViewById(R.id.sat);
             sunday = itemView.findViewById(R.id.sun);
-            durationText = itemView.findViewById(R.id.durationText);
+            timeText = itemView.findViewById(R.id.timeText);
             tripInfoSwitch = itemView.findViewById(R.id.tripInfoSwitch);
             itemView.setOnCreateContextMenuListener(this);
         }
