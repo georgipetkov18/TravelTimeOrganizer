@@ -88,6 +88,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
         this.addTripDateInput = findViewById(R.id.addTripDate);
         this.trip = new Trip();
+        this.trip.setRepeatOnDay(0);
         this.addTripMinEarlierInput = findViewById(R.id.addTripMinEarlier);
         this.group = findViewById(R.id.toggleButtonGroup);
         this.dayOfWeekPickerRow = findViewById(R.id.dayOfWeekPickerRow);

@@ -6,6 +6,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -98,10 +102,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
                 if (currentView != null && (current.getRepeatOnDay() & entry.getKey()) == entry.getKey()) {
                     currentView.setTextColor(color);
-                    holder.dayText.setVisibility(View.VISIBLE);
-                    holder.tripTimeText.setText(String.format(Locale.getDefault(), "- %s", Utils.formatTripTime(current.getTripTime())));
+                    currentView.setPaintFlags(currentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 }
             }
+
+            holder.dayText.setVisibility(current.getRepeatOnDay() != 0 ? View.VISIBLE : View.GONE);
+            holder.tripTimeText.setText(String.format(Locale.getDefault(), current.getRepeatOnDay() != 0 ? "- %s" : "%s", Utils.formatTripTime(current.getTripTime())));
         }
 
         else {
@@ -110,7 +116,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             holder.dayText.setVisibility(View.GONE);
         }
 
-//        holder.durationText.setText(Utils.formatTripTime(current.getTripTime()));
         holder.timeText.setText(current.getRepeatOnTime() != null ? current.getRepeatOnTime() : current.getExecuteOn().split(" ")[1]);
         holder.tripInfoSwitch.setChecked(current.isActive());
 
