@@ -25,4 +25,5 @@
     <string name="saturday_first_letter">С</string>
     <string name="sunday_first_letter">Н</string>
     <string name="delete">Изтрий</string>
+    <string name="add_trip">Добави пътуване</string>
 </resources>
