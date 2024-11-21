@@ -1,9 +1,9 @@
 package com.example.traveltimeorganizer;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
@@ -11,19 +11,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.traveltimeorganizer.data.models.Trip;
+import com.example.traveltimeorganizer.utils.AppNotification;
 import com.example.traveltimeorganizer.utils.Constants;
+import com.example.traveltimeorganizer.utils.NotificationHelper;
 import com.example.traveltimeorganizer.utils.TripAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class InfoHomeActivity extends AppCompatActivity {
+    private BroadcastReceiver updateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class InfoHomeActivity extends AppCompatActivity {
             return insets;
         });
 
+        NotificationHelper.createNotificationChannel(this);
+
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -44,9 +48,21 @@ public class InfoHomeActivity extends AppCompatActivity {
         }
 
         ArrayList<Trip> trips = (ArrayList<Trip>) getIntent().getExtras().getSerializable(Constants.TABLE_TRIPS_NAME);
-        RecyclerView recycler = findViewById(R.id.trip_recycler);
-        recycler.setLayoutManager(new LinearLayoutManager((this)));
-        recycler.setAdapter(new TripAdapter(trips, this));
+        if (trips != null) {
+            TripAdapter adapter = new TripAdapter(trips, this);
+            AppNotification.statusChangeCallback = adapter::onItemStatusInactive;
+            AppNotification.deleteCallback = adapter::onItemDeleted;
+            if (NotificationHelper.checkNotificationPermissions(this))
+            {
+                for (Trip trip: trips.stream().filter(Trip::isActive).collect(Collectors.toList())) {
+                    NotificationHelper.scheduleNotification(getApplicationContext(), trip);
+                }
+            }
+            RecyclerView recycler = findViewById(R.id.trip_recycler);
+            recycler.setLayoutManager(new LinearLayoutManager((this)));
+            recycler.setAdapter(adapter);
+        }
+
     }
 
     @Override

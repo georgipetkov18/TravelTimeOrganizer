@@ -11,12 +11,12 @@ import androidx.annotation.Nullable;
 
 import com.example.traveltimeorganizer.data.models.Trip;
 import com.example.traveltimeorganizer.utils.Constants;
+import com.example.traveltimeorganizer.utils.NotificationHelper;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class TripManager extends SQLiteOpenHelper implements DatabaseModelManager {
-
 
     public TripManager(@Nullable Context context) {
         super(context, Constants.DATABASE_NAME, null, 10);
@@ -67,6 +67,7 @@ public class TripManager extends SQLiteOpenHelper implements DatabaseModelManage
     }
 
     public void deleteTrip(int id) {
+        NotificationHelper.cancelNotification(id);
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.delete(Constants.TABLE_TRIPS_NAME, "id = ?", new String[] {Integer.toString(id)});
     }

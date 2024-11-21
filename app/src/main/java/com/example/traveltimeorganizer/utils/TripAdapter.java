@@ -123,6 +123,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             int id = current.getId();
             manager.setActiveStatus(id, isChecked);
             current.setActive(isChecked);
+            if (isChecked) {
+                NotificationHelper.scheduleNotification(parent.getApplicationContext(), current);
+            }
+            else {
+                NotificationHelper.cancelNotification(id);
+            }
         });
 
     }
@@ -139,6 +145,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         else {
             this.notifyItemRemoved(index);
         }
+    }
+
+    public void onItemStatusInactive(int id) {
+        Trip current = this.trips.stream().filter(trip -> trip.getId() == id).collect(Collectors.toList()).get(0);
+        current.setActive(false);
+        this.notifyItemChanged(this.trips.indexOf(current));
     }
 
     @Override

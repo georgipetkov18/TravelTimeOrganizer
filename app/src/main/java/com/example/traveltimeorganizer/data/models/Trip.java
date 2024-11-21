@@ -146,4 +146,16 @@ public class Trip implements Serializable {
     public void setRepeatOnTime(@Nullable String repeatOnTime) {
         this.repeatOnTime = repeatOnTime;
     }
+
+    public TripType getTripType() {
+        if (this.getRepeatOnDay() == null && this.getExecuteOn() != null) {
+            return TripType.exactDate;
+        }
+        else if (this.getRepeatOnDay() == 0) {
+            return TripType.repeatableOnce;
+        }
+
+        return TripType.repeatable;
+    }
 }
+

@@ -132,7 +132,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             this.tripDateTime = chosenDate.getTime();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-            String fullDateTime = formatter.format(LocalDateTime.of(year, month, day, hour, minute));
+            String fullDateTime = formatter.format(LocalDateTime.of(year, month + 1, day, hour, minute));
 
             this.addTripDateInput.setText(fullDateTime);
             this.trip.setExecuteOn(fullDateTime);
@@ -164,19 +164,6 @@ public class AddTripDetailsActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.saveTripButton).setOnClickListener(view -> {
-//            new AlertDialog.Builder(this)
-//                    .setMessage(R.string.save_trip_popup_text)
-//                    .setIcon(android.R.drawable.ic_dialog_alert)
-//                    .setPositiveButton(R.string.yes, (dialog, button) -> {
-//                        Intent i = new Intent(this, MainActivity.class);
-//                        startActivity(i);
-//                        this.finish();
-//                    })
-//                    .setNegativeButton(R.string.no, (dialog, button) -> {
-//                        String b = "no";
-//                    })
-////                    .show();
-
             boolean hasSetPlaceFrom = this.setPlaceInfo(this.addTripFromInput);
             boolean hasSetPlaceTo = this.setPlaceInfo(this.addTripToInput);
 
@@ -189,17 +176,19 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             waypoints.add(new GeoPoint(trip.getFromLatitude(), trip.getFromLongitude()));
             waypoints.add(new GeoPoint(trip.getToLatitude(), trip.getToLongitude()));
 
-            RoadManager roadManager = new OSRMRoadManager(this, BonusPackHelper.DEFAULT_USER_AGENT);
-            Road road = roadManager.getRoad(waypoints);
-            this.trip.setTripTime(road.mDuration);
-            this.trip.setActive(true);
+            new Thread(() -> {
+                RoadManager roadManager = new OSRMRoadManager(this, BonusPackHelper.DEFAULT_USER_AGENT);
+                Road road = roadManager.getRoad(waypoints);
+                this.trip.setTripTime(road.mDuration);
+                this.trip.setActive(true);
 
 
-            manager.addTrip(this.trip);
+                manager.addTrip(this.trip);
 
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-            this.finish();
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
+                this.finish();
+            }).start();
         });
 
         this.group.addOnButtonCheckedListener((currentGroup, checkedId, isChecked) -> {
@@ -334,7 +323,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
                 if (textView.isPerformingCompletion() || charSequence.length() < Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD) {
                     return;
                 }
-                executorService.execute(() -> {
+                new Thread(() -> {
                     try {
                         List<Address> addresses = geocoder.getFromLocationName(charSequence.toString(), Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_RESULTS_COUNT);
 
@@ -351,7 +340,10 @@ public class AddTripDetailsActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                });
+                }).start();
+//                executorService.execute(() -> {
+//
+//                });
             }
 
             @Override
