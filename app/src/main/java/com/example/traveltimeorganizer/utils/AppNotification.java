@@ -37,7 +37,7 @@ public class AppNotification extends BroadcastReceiver {
 
         Trip current = (Trip) intent.getSerializableExtra(currentTripVar);
 
-        ;
+
         new Handler(Looper.getMainLooper()).post(() -> {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             manager.notify(notificationID, notification);

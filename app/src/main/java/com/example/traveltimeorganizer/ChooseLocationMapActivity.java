@@ -1,10 +1,12 @@
 package com.example.traveltimeorganizer;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +20,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -36,6 +39,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -48,6 +52,7 @@ import java.util.stream.Collectors;
 public class ChooseLocationMapActivity extends AppCompatActivity {
     private MapView map;
     private GeoPoint currentPoint;
+    private MyLocationNewOverlay locationOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +70,20 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
         CheckBox mapViewCheckbox1 = findViewById(R.id.mapViewCheckbox1);
 
         mapViewCheckbox1.setOnCheckedChangeListener((view, isChecked) -> {
-            // TODO: Implement
+            if (isChecked && ActivityCompat.checkSelfPermission(getApplicationContext(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationOverlay.enableMyLocation();
+                currentPoint = locationOverlay.getMyLocation();
+                if (currentPoint == null) {
+                    Toast.makeText(this, "Възникна грешка при определянето на местоположението", Toast.LENGTH_SHORT).show();
+                    view.setChecked(false);
+                    return;
+                }
+                map.getOverlays().add(locationOverlay);
+            }
+            else {
+                currentPoint = null;
+                map.getOverlays().remove(locationOverlay);
+            }
         });
 
         findViewById(R.id.confirmLocationButton).setOnClickListener(view -> {
@@ -121,6 +139,8 @@ public class ChooseLocationMapActivity extends AppCompatActivity {
 
         MapEventsOverlay eventsOverlay = getMapEventsOverlay();
         this.map.getOverlays().add(eventsOverlay);
+
+        locationOverlay = new MyLocationNewOverlay(map);
     }
 
     private @NonNull MapEventsOverlay getMapEventsOverlay() {
