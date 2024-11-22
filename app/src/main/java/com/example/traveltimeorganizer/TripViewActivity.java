@@ -21,6 +21,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
 
@@ -47,6 +48,7 @@ public class TripViewActivity extends AppCompatActivity {
 
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
+        map.setMultiTouchControls(true);
 
         if (trip == null) {
             this.finish();
@@ -60,6 +62,7 @@ public class TripViewActivity extends AppCompatActivity {
         mapController.setZoom(8.0);
         mapController.setCenter(Constants.CENTER_OF_BG);
 
+
         Marker startMarker = new Marker(map);
         startMarker.setPosition(startPoint);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -71,14 +74,12 @@ public class TripViewActivity extends AppCompatActivity {
         endMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         map.getOverlays().add(endMarker);
 
-
-        // Add road
         RoadManager roadManager = new OSRMRoadManager(this, BonusPackHelper.DEFAULT_USER_AGENT);
         ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
         waypoints.add(startPoint);
 
         waypoints.add(endPoint);
-//
+
         Road road = roadManager.getRoad(waypoints);
         Polyline roadOverlay = RoadManager.buildRoadOverlay(road);
         map.getOverlays().add(roadOverlay);
