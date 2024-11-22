@@ -136,6 +136,8 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
             this.addTripDateInput.setText(fullDateTime);
             this.trip.setExecuteOn(fullDateTime);
+            this.trip.setRepeatOnTime(null);
+            this.trip.setRepeatOnDay(null);
         }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
     }
 
@@ -193,15 +195,6 @@ public class AddTripDetailsActivity extends AppCompatActivity {
 
         this.group.addOnButtonCheckedListener((currentGroup, checkedId, isChecked) -> {
             if (isChecked) {
-                if (checkedId == R.id.buttonPeriodically) {
-                    this.trip.setExecuteOn(null);
-                }
-
-                else if (checkedId == R.id.buttonOneTime) {
-                    this.trip.setRepeatOnDay(null);
-                    this.trip.setRepeatOnTime(null);
-                }
-
                 this.toggleRows();
                 this.addTripDateInput.setText("");
             }
@@ -220,6 +213,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
             else {
                 this.trip.setRepeatOnDay(repeatOnDayValue - checkedId);
             }
+            this.trip.setExecuteOn(null);
         });
 
         this.addTripFromInput.setThreshold(Constants.AUTOCOMPLETE_TEXT_VIEW_DEFAULT_THRESHOLD);
@@ -253,6 +247,7 @@ public class AddTripDetailsActivity extends AppCompatActivity {
                 String time = formatter.format(LocalTime.of(hour, minute));
                 this.addTripDateInput.setText(time);
                 this.trip.setRepeatOnTime(time);
+                this.trip.setExecuteOn(null);
             }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
             dialog.show();
         });

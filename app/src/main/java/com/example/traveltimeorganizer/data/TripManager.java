@@ -19,7 +19,7 @@ import java.util.Locale;
 public class TripManager extends SQLiteOpenHelper implements DatabaseModelManager {
 
     public TripManager(@Nullable Context context) {
-        super(context, Constants.DATABASE_NAME, null, 10);
+        super(context, Constants.DATABASE_NAME, null, 11);
     }
 
     @Override
