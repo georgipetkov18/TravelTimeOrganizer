@@ -69,7 +69,7 @@ public class NotificationHelper {
 
         Intent intent = new Intent(context, AppNotification.class);
 
-        String title = "TravelTimeOrganizer";
+        String title = "Време е";
         String from = trip.getFromPlace() != null ? trip.getFromPlace() : trip.getFromLatitude() + ", " + trip.getFromLongitude();
         String to = trip.getToPlace() != null ? trip.getToPlace() : trip.getToLatitude() + ", " + trip.getToLongitude();
         String message = String.format(Locale.getDefault(), "Предприемете Вашето пътуване от %s до %s сега.", from, to);

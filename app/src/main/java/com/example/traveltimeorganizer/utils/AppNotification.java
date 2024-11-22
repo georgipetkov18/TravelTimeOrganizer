@@ -29,7 +29,7 @@ public class AppNotification extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Notification notification = new NotificationCompat.Builder(context, appChannel)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.baseline_map_24)
                 .setContentTitle(intent.getStringExtra(notificationTitleVar))
                 .setContentText(intent.getStringExtra(notificationMessageVar))
                 .build();
