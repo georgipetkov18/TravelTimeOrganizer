@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.traveltimeorganizer.MainActivity;
 import com.example.traveltimeorganizer.NoInfoHomeActivity;
 import com.example.traveltimeorganizer.R;
+import com.example.traveltimeorganizer.TripViewActivity;
 import com.example.traveltimeorganizer.data.TripManager;
 import com.example.traveltimeorganizer.data.models.Trip;
 
@@ -62,6 +63,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Trip current = this.trips.get(position);
         holder.currentId = current.getId();
+
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(parent, TripViewActivity.class);
+            intent.putExtra(Constants.TRIP, current);
+            parent.startActivity(intent);
+        });
 
         String fromText = current.getFromPlace() != null ? current.getFromPlace() : current.getFromLatitude() + ", " + current.getFromLongitude();
         String toText = current.getToPlace() != null ? current.getToPlace() : current.getToLatitude() + ", " + current.getToLongitude();

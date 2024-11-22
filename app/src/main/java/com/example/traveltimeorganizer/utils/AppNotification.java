@@ -2,6 +2,7 @@ package com.example.traveltimeorganizer.utils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.os.Looper;
 import androidx.core.app.NotificationCompat;
 
 import com.example.traveltimeorganizer.R;
+import com.example.traveltimeorganizer.TripViewActivity;
 import com.example.traveltimeorganizer.data.TripManager;
 import com.example.traveltimeorganizer.data.models.Trip;
 import com.example.traveltimeorganizer.data.models.TripType;
@@ -28,21 +30,23 @@ public class AppNotification extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        TripManager tripManager = new TripManager(context);
+        Trip current = (Trip) intent.getSerializableExtra(currentTripVar);
+
+        Intent clickIntent = new Intent(context, TripViewActivity.class);
+        clickIntent.putExtra(Constants.TRIP, current);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Notification notification = new NotificationCompat.Builder(context, appChannel)
                 .setSmallIcon(R.drawable.baseline_map_24)
                 .setContentTitle(intent.getStringExtra(notificationTitleVar))
                 .setContentText(intent.getStringExtra(notificationMessageVar))
+                .setContentIntent(pendingIntent)
                 .build();
-        TripManager tripManager = new TripManager(context);
-
-        Trip current = (Trip) intent.getSerializableExtra(currentTripVar);
-
 
         new Handler(Looper.getMainLooper()).post(() -> {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             manager.notify(notificationID, notification);
-            Intent updateIntent = new Intent("update");
-            context.sendBroadcast(updateIntent);
             if (current != null) {
                 if (current.getTripType() == TripType.repeatableOnce) {
                     tripManager.setActiveStatus(current.getId(), false);

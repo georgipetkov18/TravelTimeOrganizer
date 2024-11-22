@@ -38,4 +38,5 @@ public class Constants {
     public static final String REPEAT_ON_TIME = "repeat_on_time";
     public static final String EXECUTE_ON = "execute_on";
     public static final String PLACE_INPUT_STRING_FORMAT = "%s - %s: %6.4f, %6.4f";
+    public static final String TRIP = "trip";
 }
