@@ -24,7 +24,6 @@ public class AppNotification extends BroadcastReceiver {
     public static final String notificationTitleVar = "notificationTitle";
     public static final String notificationMessageVar = "notificationMessage";
     public static final String currentTripVar = "currentTrip";
-    public static final int notificationID = 77;
     public static Consumer<Integer> statusChangeCallback;
     public static Consumer<Integer> deleteCallback;
 
@@ -45,9 +44,9 @@ public class AppNotification extends BroadcastReceiver {
                 .build();
 
         new Handler(Looper.getMainLooper()).post(() -> {
-            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.notify(notificationID, notification);
             if (current != null) {
+                NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.notify(current.getId(), notification);
                 if (current.getTripType() == TripType.repeatableOnce) {
                     tripManager.setActiveStatus(current.getId(), false);
                     statusChangeCallback.accept(current.getId());

@@ -80,7 +80,7 @@ public class NotificationHelper {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
-                AppNotification.notificationID,
+                trip.getId(),
                 intent,
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
         );
