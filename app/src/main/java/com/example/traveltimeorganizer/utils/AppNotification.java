@@ -1,5 +1,6 @@
 package com.example.traveltimeorganizer.utils;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -34,29 +35,30 @@ public class AppNotification extends BroadcastReceiver {
 
         Intent clickIntent = new Intent(context, TripViewActivity.class);
         clickIntent.putExtra(Constants.TRIP, current);
+        clickIntent.putExtra(Constants.DISMISS_NOTIFICATION, true);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        Notification notification = new NotificationCompat.Builder(context, appChannel)
-                .setSmallIcon(R.drawable.baseline_map_24)
-                .setContentTitle(intent.getStringExtra(notificationTitleVar))
-                .setContentText(intent.getStringExtra(notificationMessageVar))
-                .setContentIntent(pendingIntent)
-                .build();
+        if (current != null) {
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, current.getId(), clickIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            Notification notification = new NotificationCompat.Builder(context, appChannel)
+                    .setSmallIcon(R.drawable.baseline_map_24)
+                    .setContentTitle(intent.getStringExtra(notificationTitleVar))
+                    .setContentText(intent.getStringExtra(notificationMessageVar))
+                    .setContentIntent(pendingIntent)
+                    .build();
 
-        new Handler(Looper.getMainLooper()).post(() -> {
-            if (current != null) {
+            new Handler(Looper.getMainLooper()).post(() -> {
                 NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 manager.notify(current.getId(), notification);
                 if (current.getTripType() == TripType.repeatableOnce) {
                     tripManager.setActiveStatus(current.getId(), false);
                     statusChangeCallback.accept(current.getId());
                 }
+
                 else if (current.getTripType() == TripType.exactDate) {
                     tripManager.deleteTrip(current.getId());
                     deleteCallback.accept(current.getId());
                 }
-            }
-
-        });
+            });
+        }
     }
 }

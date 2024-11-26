@@ -1,5 +1,7 @@
 package com.example.traveltimeorganizer;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 
@@ -40,7 +42,24 @@ public class TripViewActivity extends AppCompatActivity {
             return insets;
         });
 
-        Trip trip = (Trip) getIntent().getExtras().getSerializable(Constants.TRIP);
+        Bundle b = getIntent().getExtras();
+
+        if (b == null) {
+            this.finish();
+            return;
+        }
+
+        Trip trip = (Trip) b.getSerializable(Constants.TRIP);
+
+        if (trip == null) {
+            this.finish();
+            return;
+        }
+
+        if (b.getBoolean(Constants.DISMISS_NOTIFICATION)) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(trip.getId());
+        }
 
         MapView map = findViewById(R.id.map);
         StrictMode.ThreadPolicy gfgPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -50,10 +69,6 @@ public class TripViewActivity extends AppCompatActivity {
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT);
         map.setMultiTouchControls(true);
 
-        if (trip == null) {
-            this.finish();
-            return;
-        }
 
         GeoPoint startPoint = new GeoPoint(trip.getFromLatitude(), trip.getFromLongitude());
         GeoPoint endPoint = new GeoPoint(trip.getToLatitude(), trip.getToLongitude());
