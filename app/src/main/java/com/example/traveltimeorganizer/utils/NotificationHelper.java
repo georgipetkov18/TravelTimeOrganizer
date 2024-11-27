@@ -134,6 +134,14 @@ public class NotificationHelper {
                         default:
                             return;
                     }
+                    int id = Integer.MAX_VALUE - trip.getId() - dayOfWeek.getValue();
+                    pendingIntent = PendingIntent.getBroadcast(
+                            context,
+                            Integer.MAX_VALUE - trip.getId() - dayOfWeek.getValue(),
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+
                     alarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
                             getTimeRepeating(trip, dayOfWeek),
@@ -188,13 +196,15 @@ public class NotificationHelper {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             LocalTime alarmTime = LocalTime.parse(trip.getRepeatOnTime(), formatter);
             LocalDateTime alarmDateTime = LocalDate.now().atTime(alarmTime);
+            alarmDateTime = alarmDateTime.minusMinutes(trip.getMinEarlier()).minusSeconds((long)trip.getTripTime());
 
             if (LocalDateTime.now().isAfter(alarmDateTime)) {
                 alarmDateTime = alarmDateTime.with(next(dayofWeek));
             }
 
             Instant instant = alarmDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant();
-            return instant.toEpochMilli() - ((long) trip.getTripTime() * 1000) - ((long) trip.getMinEarlier() * 60 * 1000);
+            long a = instant.toEpochMilli();
+            return instant.toEpochMilli();
         }
 
         return 0;
